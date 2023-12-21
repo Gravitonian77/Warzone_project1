@@ -18,6 +18,11 @@ MapLoader::MapLoader(std::string map_file_name){
 	vector<string> terriotries;
 
 	if(file.is_open()){
+		while(getline(file, line)){
+			if(line.empty())
+				continue;
 
+
+		}
 	}
 }
