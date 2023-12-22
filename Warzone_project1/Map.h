@@ -16,9 +16,11 @@ class Map{
 
 class Territory{
 private:
+    int x, y;
 	Territory* next_territory;
 public:
 	Territory();
+    Territory(int, int, Territory*);
 	Territory(const Territory& t);
 };
 

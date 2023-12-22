@@ -9,6 +9,20 @@
 
 using namespace std;
 
+Territory::Territory() = default;
+
+Territory::Territory(int x, int y, Territory * t) {
+    this->x = x;
+    this->y = y;
+    this->next_territory = t;
+}
+
+Territory::Territory(const Territory &t) {
+    this->x = t.x;
+    this->y = t.y;
+    this->next_territory = t.next_territory;
+}
+
 MapLoader::MapLoader() = default;
 
 MapLoader::MapLoader(std::string map_file_name){
