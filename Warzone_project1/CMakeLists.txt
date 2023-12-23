@@ -5,4 +5,5 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Warzone_project1
         Map.h
-        Map.cpp)
+        Map.cpp
+        MapDriver.cpp)
