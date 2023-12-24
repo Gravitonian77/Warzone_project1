@@ -10,6 +10,8 @@
 
 using namespace std;
 
+Map::Map() = default;
+
 Territory::Territory() = default;
 
 Territory::Territory(string name, int x, int y, string continent, vector<string> t) {
@@ -77,8 +79,6 @@ const vector<Territory*>& MapLoader::getTerritories() const {
 MapLoader::MapLoader(std::string map_file_name) {
     ifstream file(map_file_name);
     string line;
-    map<string, int> continents;
-    vector<Territory *> territories;
     bool in_territory_section = false;
 
     if (file.is_open()) {
@@ -138,6 +138,18 @@ MapLoader::MapLoader(std::string map_file_name) {
         file.close();
     }else{
         cout << "Unable to open file";
+    }
+
+    for(Territory* territory: territories){
+        cout << endl;
+        cout << "Name: " << territory->getName() << " ";
+        cout << "X: " << territory->getX() << " ";
+        cout << "Y: " << territory->getY() << " ";
+        cout << "Continent: " << territory->getContinent() << " ";
+        cout << "Adjacent territories: " ;
+        for(string adjTerr:  territory->getAdjTerritory()) {
+            cout << adjTerr << ", ";
+        }
     }
 
 }
