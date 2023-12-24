@@ -16,11 +16,15 @@ class Territory;
 
 class Map{
 private:
-    map<string, int> continents;
+    static map<string, int> continents;
     list<Territory*> territories;
 public:
     Map();
     void initiate_territories(vector<Territory*> territories);
+    const list<Territory*> &getTerritories() const;
+    void set_territories(const list<Territory *> &territories);
+    void establish_graph_edges();
+    Territory* find_territory_by_name(const string& name);
 };
 
 class Territory{
@@ -29,7 +33,8 @@ private:
     int x;
     int y;
     string continent;
-	vector<string> adj_territory;
+	vector<string> adj_territory_names;
+    list<Territory*> adj_territories;
 public:
 	Territory();
     Territory(string, int, int, string, vector<string> t);
@@ -43,8 +48,10 @@ public:
     void setY(int y);
     const string &getContinent() const;
     void setContinent(const string &continent);
-    const vector<string> &getAdjTerritory() const;
-    void setAdjTerritory(const vector<string> &adjTerritory);
+    const vector<string> &get_adj_territory_names() const;
+    void set_adj_territory_names(const vector<string> &adjTerritory);
+    list<Territory *> & get_adj_territory();
+    void set_adj_territory(const list<Territory *> &adjTerritories);
 };
 
 
@@ -56,13 +63,15 @@ public:
 	MapLoader(const MapLoader& map);
 	const string &getMapFileName() const;
 	void setMapFileName(const string &mapFileName);
-    const vector<Territory*>& getTerritories() const;
+    static const vector<Territory*>& get_territories();
 
 private:
 	string map_file_name;
-    //replace these 2 attributes with a Map object
     map<string, int> continents;
-    vector<Territory*> territories;
+    static vector<Territory*> territories;
+public:
+    const map<string, int> &getContinents() const;
+    void setContinents(const map<string, int> &continents);
 };
 
 #endif //WARZONE_PROJECT1_MAP_H

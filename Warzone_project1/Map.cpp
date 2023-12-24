@@ -12,6 +12,39 @@ using namespace std;
 
 Map::Map() = default;
 
+void Map::initiate_territories(vector<Territory *> territories) {
+    list<Territory*> terr_list;
+    terr_list.insert(terr_list.end(), MapLoader::get_territories().begin(), MapLoader::get_territories().end());
+    set_territories(terr_list);
+}
+
+const list<Territory *> &Map::getTerritories() const {
+    return territories;
+}
+
+void Map::set_territories(const list<Territory *> &territories) {
+    Map::territories = territories;
+}
+
+Territory* Map::find_territory_by_name(const std::string &name) {
+    for(Territory* territory: territories){
+        if(territory->getName() == name)
+            return territory;
+    }
+    return nullptr;
+}
+
+void Map::establish_graph_edges() {
+    for(Territory* territory: territories){
+        for(const string& adj_name : territory->get_adj_territory_names()){
+            Territory* adjacent_territory = find_territory_by_name(adj_name);
+            if(adjacent_territory){
+                territory->get_adj_territory().push_back(adjacent_territory);
+            }
+        }
+    }
+}
+
 Territory::Territory() = default;
 
 Territory::Territory(string name, int x, int y, string continent, vector<string> t) {
@@ -19,7 +52,7 @@ Territory::Territory(string name, int x, int y, string continent, vector<string>
     this->x = x;
     this->y = y;
     this->continent = continent;
-    this->adj_territory = t;
+    this->adj_territory_names = t;
 }
 
 Territory::Territory(const Territory &t) {
@@ -27,7 +60,7 @@ Territory::Territory(const Territory &t) {
     this->x = t.x;
     this->y = t.y;
     this->continent = t.continent;
-    this->adj_territory = t.adj_territory;
+    this->adj_territory_names = t.adj_territory_names;
 }
 
 const string &Territory::getName() const {
@@ -62,17 +95,25 @@ void Territory::setContinent(const string &continent) {
     Territory::continent = continent;
 }
 
-const vector<string> &Territory::getAdjTerritory() const {
-    return adj_territory;
+const vector<string> &Territory::get_adj_territory_names() const {
+    return adj_territory_names;
 }
 
-void Territory::setAdjTerritory(const vector<string> &adjTerritory) {
-    adj_territory = adjTerritory;
+void Territory::set_adj_territory_names(const vector<string> &adjTerritory) {
+    adj_territory_names = adjTerritory;
+}
+
+list<Territory *> & Territory::get_adj_territory() {
+    return adj_territories;
+}
+
+void Territory::set_adj_territory(const list<Territory *> &adjTerritories) {
+    adj_territories = adjTerritories;
 }
 
 MapLoader::MapLoader() = default;
 
-const vector<Territory*>& MapLoader::getTerritories() const {
+const vector<Territory*>& MapLoader::get_territories(){
     return territories;
 }
 
@@ -147,9 +188,17 @@ MapLoader::MapLoader(std::string map_file_name) {
         cout << "Y: " << territory->getY() << " ";
         cout << "Continent: " << territory->getContinent() << " ";
         cout << "Adjacent territories: " ;
-        for(string adjTerr:  territory->getAdjTerritory()) {
+        for(string adjTerr: territory->get_adj_territory_names()) {
             cout << adjTerr << ", ";
         }
     }
 
+}
+
+const map<string, int> &MapLoader::getContinents() const {
+    return continents;
+}
+
+void MapLoader::setContinents(const map<string, int> &continents) {
+    MapLoader::continents = continents;
 }
